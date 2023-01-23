@@ -19,10 +19,15 @@ repositories {
 dependencies {
     // Use JUnit test framework.
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.eclipse.jetty:jetty-slf4j-impl:11.0.13")
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
     implementation("org.glassfish.jersey.core:jersey-server:2.38")
+    implementation("org.eclipse.jetty:jetty-server:11.0.13")
+    implementation("org.eclipse.jetty:jetty-servlet:11.0.13")
+
+
 }
 
 application {

@@ -3,12 +3,45 @@
  */
 package jersey;
 
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
+    //private static final Logger logger = LoggerFactory.getLogger(App.class);
+
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        // Create a Server instance.
+        Server server = new Server(8080);
+
+        // Create a ServerConnector to accept connections from clients.
+        Connector connector = new ServerConnector(server);
+        // Add the Connector to the Server
+        server.addConnector(connector);
+
+        // Create a ServletContextHandler with contextPath.
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+        context.setContextPath("/");
+
+//        // Add the CrossOriginFilter to protect from CSRF attacks.
+//        FilterHolder filterHolder = context.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+//        // Configure the filter.
+//        filterHolder.setAsyncSupported(true);
+
+        // Link the context to the server.
+        server.setHandler(context);
+
+        try {
+            server.start();
+        } catch (Exception e) {
+            //logger.error("Error", e);
+        }
+
+        //System.out.println(new App().getGreeting());
     }
 }
