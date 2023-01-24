@@ -3,10 +3,17 @@
  */
 package jersey;
 
+import jakarta.servlet.DispatcherType;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.servlet.ServletContainer;
+
+import java.util.EnumSet;
 
 public class App {
     public String getGreeting() {
@@ -28,20 +35,26 @@ public class App {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         context.setContextPath("/");
 
-//        // Add the CrossOriginFilter to protect from CSRF attacks.
-//        FilterHolder filterHolder = context.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
-//        // Configure the filter.
-//        filterHolder.setAsyncSupported(true);
+        // Add the Servlet implementing Jersey.
+        ServletHolder servletHolder = context.addServlet(ServletContainer.class, "/api/*");
+
+        servletHolder.setInitOrder(0);
+        servletHolder.setInitParameter("jersey.config.server.provider.packages", "jersey.resources");
+
+        // Add the CrossOriginFilter to protect from CSRF attacks.
+        FilterHolder filterHolder = context.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        // Configure the filter.
+        filterHolder.setAsyncSupported(true);
 
         // Link the context to the server.
         server.setHandler(context);
 
         try {
             server.start();
+            server.join();
         } catch (Exception e) {
+            System.out.printf("error" + e);
             //logger.error("Error", e);
         }
-
-        //System.out.println(new App().getGreeting());
     }
 }
