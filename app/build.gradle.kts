@@ -23,11 +23,9 @@ dependencies {
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
-    //implementation("org.glassfish.jersey.containers:jersey-container-jetty-http:2.38")
     implementation("org.eclipse.jetty:jetty-server:11.0.13")
     implementation("org.eclipse.jetty:jetty-servlet:11.0.13")
     implementation("org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.0")
-//    implementation("org.glassfish.jersey.core:jersey-server:3.1.0")
     implementation("org.glassfish.jersey.inject:jersey-hk2:3.1.0")
     implementation("org.eclipse.jetty:jetty-servlets:11.0.13")
 }

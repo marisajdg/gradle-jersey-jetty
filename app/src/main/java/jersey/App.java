@@ -4,9 +4,7 @@
 package jersey;
 
 import jakarta.servlet.DispatcherType;
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -16,28 +14,13 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import java.util.EnumSet;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
-    //private static final Logger logger = LoggerFactory.getLogger(App.class);
-
-    public static void main(String[] args) {
-        // Create a Server instance.
-        Server server = new Server(8080);
-
-        // Create a ServerConnector to accept connections from clients.
-        Connector connector = new ServerConnector(server);
-        // Add the Connector to the Server
-        server.addConnector(connector);
-
+    public static ServletContextHandler buildContextHandler() {
         // Create a ServletContextHandler with contextPath.
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         context.setContextPath("/");
 
         // Add the Servlet implementing Jersey.
         ServletHolder servletHolder = context.addServlet(ServletContainer.class, "/api/*");
-
         servletHolder.setInitOrder(0);
         servletHolder.setInitParameter("jersey.config.server.provider.packages", "jersey.resources");
 
@@ -46,15 +29,24 @@ public class App {
         // Configure the filter.
         filterHolder.setAsyncSupported(true);
 
+        return context;
+    }
+
+    public static void main(String[] args) {
+        // Create a Server instance.
+        Server server = new Server(8080);
+
         // Link the context to the server.
-        server.setHandler(context);
+        server.setHandler(buildContextHandler());
 
         try {
             server.start();
             server.join();
         } catch (Exception e) {
             System.out.printf("error" + e);
-            //logger.error("Error", e);
+        }
+        finally {
+            server.destroy();
         }
     }
 }
