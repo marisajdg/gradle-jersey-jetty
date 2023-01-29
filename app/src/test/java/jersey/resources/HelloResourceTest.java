@@ -13,6 +13,7 @@ import static org.junit.Assert.*;
 
 public class HelloResourceTest {
     private Server server;
+    private Client client = ClientBuilder.newClient();
 
     @Before
     public void setUp() throws Exception {
@@ -28,7 +29,6 @@ public class HelloResourceTest {
 
     @Test
     public void sayHello() {
-        Client client = ClientBuilder.newClient();
         Response response = client.target("http://localhost:8080/").path("api/hello").request().get();
         assertEquals(200, response.getStatus());
         assertEquals("Hello World!", response.readEntity(String.class));
